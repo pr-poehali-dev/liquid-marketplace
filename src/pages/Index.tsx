@@ -1,6 +1,8 @@
 import { useState, type FC } from 'react';
 import * as LucideIcons from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
+import AdminPage from './AdminPage';
+import { type Lot, type AuthUser, type Theme, THEMES, CATEGORIES, LOTS, BOOKINGS, STATUS_MAP, AUTH_URL } from '@/data/appData';
 
 // ─── Icon ────────────────────────────────────────────────────────────────────
 const Icon: FC<LucideProps & { name: string; fallback?: string }> = ({ name, fallback = 'CircleAlert', ...props }) => {
@@ -9,73 +11,6 @@ const Icon: FC<LucideProps & { name: string; fallback?: string }> = ({ name, fal
   if (!C) return null;
   return <C {...props} />;
 };
-
-// ─── Data ────────────────────────────────────────────────────────────────────
-interface Lot {
-  id: string; title: string; price: number; priceLabel?: string;
-  category: string; type: 'product' | 'service';
-  seller: { id: string; name: string; rating: number; reviewCount: number };
-  images: string[]; description: string; location: string;
-  createdAt: string; status: string; isFavorite?: boolean; views: number;
-}
-
-interface Category { id: string; name: string; icon: string; children: { id: string; name: string }[] }
-
-const CATEGORIES: Category[] = [
-  { id: 'realty', name: 'Недвижимость', icon: '🏠', children: [{ id: 'apartments', name: 'Квартиры' }, { id: 'rooms', name: 'Комнаты' }, { id: 'houses', name: 'Дома, дачи' }, { id: 'land', name: 'Участки' }, { id: 'garages', name: 'Гаражи' }, { id: 'commercial', name: 'Коммерческая' }] },
-  { id: 'transport', name: 'Транспорт', icon: '🚗', children: [{ id: 'cars', name: 'Автомобили' }, { id: 'motos', name: 'Мотоциклы' }, { id: 'trucks', name: 'Грузовики' }, { id: 'parts', name: 'Запчасти' }, { id: 'autoservice', name: 'Автосервисы' }] },
-  { id: 'services', name: 'Услуги', icon: '🔧', children: [{ id: 'repair', name: 'Ремонт и стройка' }, { id: 'cleaning', name: 'Клининг' }, { id: 'beauty', name: 'Красота' }, { id: 'education', name: 'Обучение' }, { id: 'it', name: 'IT' }, { id: 'legal', name: 'Юридические' }, { id: 'photo', name: 'Фото и видео' }] },
-  { id: 'personal', name: 'Личные вещи', icon: '👗', children: [{ id: 'clothes', name: 'Одежда' }, { id: 'watches', name: 'Часы и украшения' }, { id: 'cosmetics', name: 'Косметика' }, { id: 'sport', name: 'Спорт' }] },
-  { id: 'home', name: 'Для дома', icon: '🏡', children: [{ id: 'furniture', name: 'Мебель' }, { id: 'appliances', name: 'Техника' }, { id: 'kitchen', name: 'Кухня' }, { id: 'garden', name: 'Сад' }] },
-  { id: 'electronics', name: 'Электроника', icon: '📱', children: [{ id: 'phones', name: 'Смартфоны' }, { id: 'laptops', name: 'Ноутбуки' }, { id: 'tv', name: 'ТВ, аудио' }, { id: 'gaming', name: 'Игры' }] },
-  { id: 'hobby', name: 'Хобби', icon: '🎸', children: [{ id: 'books', name: 'Книги' }, { id: 'music', name: 'Инструменты' }, { id: 'hunting', name: 'Охота и рыбалка' }, { id: 'antique', name: 'Антиквариат' }] },
-  { id: 'animals', name: 'Животные', icon: '🐾', children: [{ id: 'cats_dogs', name: 'Кошки, собаки' }, { id: 'birds', name: 'Птицы' }, { id: 'pet_food', name: 'Корма' }] },
-  { id: 'business', name: 'Для бизнеса', icon: '💼', children: [{ id: 'equipment', name: 'Оборудование' }, { id: 'office', name: 'Офис' }, { id: 'outsource', name: 'Аутсорсинг' }] },
-  { id: 'jobs', name: 'Вакансии', icon: '📋', children: [{ id: 'jobs_search', name: 'Поиск работы' }, { id: 'staff_search', name: 'Поиск сотрудников' }] },
-];
-
-const LOTS: Lot[] = [
-  { id: '1', title: 'iPhone 14 Pro 256GB', price: 65000, category: 'electronics', type: 'product', seller: { id: 's1', name: 'Алексей М.', rating: 4.8, reviewCount: 47 }, images: ['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400'], description: 'Продаю iPhone 14 Pro. Без царапин, полный комплект.', location: 'Москва', createdAt: '2026-05-14', status: 'active', views: 342 },
-  { id: '2', title: 'Ремонт квартир под ключ', price: 3500, priceLabel: 'от 3 500 ₽/м²', category: 'services', type: 'service', seller: { id: 's2', name: 'СтройМастер', rating: 4.9, reviewCount: 128 }, images: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400'], description: 'Профессиональный ремонт квартир. Опыт 12 лет.', location: 'Москва', createdAt: '2026-05-13', status: 'active', views: 891 },
-  { id: '3', title: '2-комнатная квартира, 58 м², Замоскворечье', price: 14500000, category: 'realty', type: 'product', seller: { id: 's3', name: 'Мария К.', rating: 4.7, reviewCount: 23 }, images: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400'], description: 'Светлая квартира с видом на набережную.', location: 'Москва, ЦАО', createdAt: '2026-05-12', status: 'active', views: 1240 },
-  { id: '4', title: 'MacBook Pro 16" M3 Max', price: 289000, category: 'electronics', type: 'product', seller: { id: 's4', name: 'TechStore PRO', rating: 4.6, reviewCount: 89 }, images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400'], description: 'MacBook Pro 16", M3 Max, 48 ГБ ОЗУ.', location: 'Санкт-Петербург', createdAt: '2026-05-11', status: 'active', views: 567 },
-  { id: '5', title: 'Юридические услуги для бизнеса', price: 5000, priceLabel: 'от 5 000 ₽/час', category: 'services', type: 'service', seller: { id: 's5', name: 'Адвокат Петров', rating: 5.0, reviewCount: 64 }, images: ['https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400'], description: 'Регистрация ООО, договоры. Стаж 15 лет.', location: 'Москва', createdAt: '2026-05-10', status: 'active', views: 423 },
-  { id: '6', title: 'Toyota Camry 2022, 2.5 Hybrid', price: 3250000, category: 'transport', type: 'product', seller: { id: 's6', name: 'AutoElite', rating: 4.5, reviewCount: 31 }, images: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=400'], description: 'Один владелец, пробег 38 000 км.', location: 'Казань', createdAt: '2026-05-09', status: 'active', views: 789 },
-  { id: '7', title: 'Профессиональная фотосессия', price: 8000, priceLabel: '8 000 ₽/сессия', category: 'services', type: 'service', seller: { id: 's7', name: 'Фотограф Анна', rating: 4.9, reviewCount: 112 }, images: ['https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400'], description: 'Портретная, деловая съёмка. Обработка 50+ фото.', location: 'Москва', createdAt: '2026-05-08', status: 'active', views: 345 },
-  { id: '8', title: 'Диван угловой, б/у 1 год', price: 25000, category: 'home', type: 'product', seller: { id: 's8', name: 'Игорь Р.', rating: 4.3, reviewCount: 8 }, images: ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'], description: 'Угловой диван серого цвета, 280×180 см.', location: 'Екатеринбург', createdAt: '2026-05-07', status: 'active', views: 198 },
-];
-
-const BOOKINGS = [
-  { id: 'b1', lot: LOTS[0], status: 'pending', createdAt: '2026-05-15', message: 'Хочу забронировать.' },
-  { id: 'b2', lot: LOTS[1], status: 'confirmed', createdAt: '2026-05-12', message: 'Нужен ремонт 65 м².' },
-  { id: 'b3', lot: LOTS[5], status: 'completed', createdAt: '2026-04-20', message: 'Готов к сделке.' },
-];
-
-const STATUS_MAP: Record<string, { label: string; color: string }> = {
-  pending: { label: 'Ожидает подтверждения', color: 'text-yellow-400 bg-yellow-400/10' },
-  confirmed: { label: 'Подтверждено', color: 'text-green-400 bg-green-400/10' },
-  rejected: { label: 'Отклонено', color: 'text-red-400 bg-red-400/10' },
-  completed: { label: 'Завершено', color: 'text-blue-400 bg-blue-400/10' },
-  cancelled: { label: 'Отменено', color: 'text-gray-400 bg-gray-400/10' },
-};
-
-const MOCK_USERS = [
-  { id: 'u1', name: 'Алина Иванова', email: 'alina@example.com', role: 'buyer', status: 'active', lots: 0, bookings: 3 },
-  { id: 'u2', name: 'СтройМастер', email: 'master@stroy.ru', role: 'seller', status: 'active', lots: 12, bookings: 89 },
-  { id: 'u3', name: 'Алексей М.', email: 'alex@mail.ru', role: 'seller', status: 'blocked', lots: 4, bookings: 17 },
-  { id: 'u4', name: 'AutoElite', email: 'auto@elite.ru', role: 'seller', status: 'active', lots: 28, bookings: 145 },
-];
-
-// ─── Auth types ──────────────────────────────────────────────────────────────
-interface AuthUser { user_id: string; name: string; role: string; token: string }
-
-// ─── Темы ────────────────────────────────────────────────────────────────────
-type Theme = 'night' | 'day' | 'sunset';
-const THEMES: { id: Theme; emoji: string; name: string; hero: string }[] = [
-  { id: 'night',  emoji: '🌑', name: 'Ночь',  hero: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/2748104d-bbdd-4fdf-9410-046de739311f.jpg' },
-  { id: 'day',    emoji: '☀️', name: 'День',  hero: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/0fc34ad0-9e2a-40f9-8080-2af42eaccfed.jpg' },
-  { id: 'sunset', emoji: '🌅', name: 'Закат', hero: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/07d59aca-ed0a-4ed3-86ed-9cf315604f6e.jpg' },
-];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function fmtPrice(price: number): string {
@@ -231,6 +166,29 @@ function BottomNav({ page, nav }: { page: string; nav: (p: string) => void }) {
         })}
       </div>
     </nav>
+  );
+}
+
+// ─── ThemeSwitcher ────────────────────────────────────────────────────────────
+function ThemeSwitcher({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
+  return (
+    <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm p-1 rounded-xl border border-white/10">
+      {THEMES.map((t) => (
+        <button
+          key={t.id}
+          onClick={() => setTheme(t.id)}
+          title={t.name}
+          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+            theme === t.id
+              ? 'bg-white/20 text-white shadow-sm scale-105'
+              : 'text-white/60 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <span>{t.emoji}</span>
+          <span className="hidden sm:block">{t.name}</span>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -601,7 +559,7 @@ function ChatPage() {
                 ))}
               </div>
               <div className="p-3 border-t border-border flex gap-2">
-                <input value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()} placeholder="Напишите сообщение..." className="flex-1 bg-secondary text-foreground text-sm px-4 py-2.5 rounded-xl outline-none placeholder:text-muted-foreground" />
+                <input value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') send(); }} placeholder="Напишите сообщение..." className="flex-1 bg-secondary text-foreground text-sm px-4 py-2.5 rounded-xl outline-none placeholder:text-muted-foreground" />
                 <button onClick={send} className="w-10 h-10 bg-primary text-primary-foreground rounded-xl flex items-center justify-center"><Icon name="Send" size={16} /></button>
               </div>
             </div>
@@ -759,234 +717,7 @@ function SellerPage() {
   );
 }
 
-// ─── AdminPage ────────────────────────────────────────────────────────────────
-function AdminPage() {
-  const [tab, setTab] = useState('dashboard');
-  const [userFilter, setUserFilter] = useState('all');
-  const [subEnabled, setSubEnabled] = useState(true);
-  const [subPrice, setSubPrice] = useState('500');
-  const [catExpanded, setCatExpanded] = useState<string | null>(null);
-
-  const TABS = [{ id: 'dashboard', label: 'Дашборд', icon: 'LayoutDashboard' }, { id: 'users', label: 'Пользователи', icon: 'Users' }, { id: 'lots', label: 'Лоты', icon: 'Tag' }, { id: 'categories', label: 'Категории', icon: 'Grid3X3' }, { id: 'bookings', label: 'Бронирования', icon: 'CalendarCheck' }, { id: 'reviews', label: 'Отзывы', icon: 'Star' }, { id: 'subscriptions', label: 'Подписки', icon: 'CreditCard' }, { id: 'reports', label: 'Отчёты', icon: 'FileBarChart' }];
-  const filteredUsers = MOCK_USERS.filter((u) => userFilter === 'all' || (userFilter === 'seller' && u.role === 'seller') || (userFilter === 'buyer' && u.role === 'buyer') || (userFilter === 'blocked' && u.status === 'blocked'));
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center"><Icon name="ShieldCheck" size={18} className="text-primary" /></div>
-        <h1 className="text-2xl font-black">Панель администратора</h1>
-      </div>
-      <div className="flex gap-6">
-        <aside className="hidden md:flex flex-col w-52 shrink-0 gap-1">
-          {TABS.map((t) => <button key={t.id} onClick={() => setTab(t.id)} className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left ${tab === t.id ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}><Icon name={t.icon} size={16} />{t.label}</button>)}
-        </aside>
-        <div className="md:hidden w-full overflow-x-auto mb-4">
-          <div className="flex gap-2 pb-2">{TABS.map((t) => <button key={t.id} onClick={() => setTab(t.id)} className={`shrink-0 px-3 py-2 rounded-xl text-xs font-medium ${tab === t.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}>{t.label}</button>)}</div>
-        </div>
-        <div className="flex-1 min-w-0">
-          {tab === 'dashboard' && (
-            <div className="space-y-5">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                {[{ label: 'Пользователей', value: '1 248', icon: 'Users', color: 'text-blue-400 bg-blue-400/10' }, { label: 'Лотов', value: '4 891', icon: 'Tag', color: 'text-green-400 bg-green-400/10' }, { label: 'Бронирований', value: '892', icon: 'CalendarCheck', color: 'text-primary bg-primary/10' }, { label: 'Доход/мес', value: '47 500 ₽', icon: 'TrendingUp', color: 'text-yellow-400 bg-yellow-400/10' }].map((s) => (
-                  <div key={s.label} className="bg-card border border-border rounded-2xl p-4">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${s.color}`}><Icon name={s.icon} size={20} /></div>
-                    <p className="text-2xl font-black">{s.value}</p>
-                    <p className="text-xs text-muted-foreground">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="bg-card border border-border rounded-2xl p-5">
-                <h3 className="font-bold mb-4">Активность за неделю</h3>
-                <div className="flex items-end gap-2 h-32">
-                  {[40, 65, 55, 80, 70, 90, 85].map((h, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                      <div className="w-full bg-primary/20 rounded-t-md relative" style={{ height: `${h}%` }}>
-                        <div className="absolute bottom-0 left-0 right-0 bg-primary rounded-t-md" style={{ height: '40%' }} />
-                      </div>
-                      <span className="text-[10px] text-muted-foreground">{['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][i]}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-          {tab === 'users' && (
-            <div>
-              <div className="flex gap-2 mb-4 flex-wrap">
-                {[{ v: 'all', l: 'Все' }, { v: 'seller', l: 'Продавцы' }, { v: 'buyer', l: 'Покупатели' }, { v: 'blocked', l: 'Заблокированные' }].map((f) => <button key={f.v} onClick={() => setUserFilter(f.v)} className={`text-xs px-3 py-1.5 rounded-lg font-medium ${userFilter === f.v ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}>{f.l}</button>)}
-              </div>
-              <div className="space-y-2">{filteredUsers.map((u) => (
-                <div key={u.id} className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold shrink-0">{u.name.charAt(0)}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-sm">{u.name}</p>
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${u.status === 'blocked' ? 'bg-red-400/10 text-red-400' : 'bg-green-400/10 text-green-400'}`}>{u.status === 'blocked' ? 'Заблокирован' : 'Активен'}</span>
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">{u.role === 'seller' ? 'Продавец' : 'Покупатель'}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{u.email} · Лоты: {u.lots} · Брони: {u.bookings}</p>
-                  </div>
-                  <div className="flex flex-col gap-1.5 shrink-0">
-                    <button className="text-xs px-2.5 py-1 bg-secondary text-foreground rounded-lg">{u.status === 'blocked' ? 'Разблок.' : 'Блок.'}</button>
-                    <button className="text-xs px-2.5 py-1 bg-secondary text-muted-foreground rounded-lg">Роль</button>
-                  </div>
-                </div>
-              ))}</div>
-            </div>
-          )}
-          {tab === 'lots' && (
-            <div className="space-y-3">
-              <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-2xl p-4 flex items-center gap-3"><Icon name="Clock" size={18} className="text-yellow-400" /><p className="text-sm">7 лотов ожидают модерации</p></div>
-              {LOTS.slice(0, 5).map((lot) => (
-                <div key={lot.id} className="bg-card border border-border rounded-2xl p-4 flex gap-3">
-                  <div className="w-14 h-14 rounded-xl overflow-hidden bg-secondary shrink-0">{lot.images[0] && <img src={lot.images[0]} alt="" className="w-full h-full object-cover" />}</div>
-                  <div className="flex-1 min-w-0"><p className="font-semibold text-sm line-clamp-1">{lot.title}</p><p className="text-xs text-muted-foreground">{lot.seller.name} · {lot.location}</p><p className="text-primary font-bold text-sm">{lot.price.toLocaleString('ru')} ₽</p></div>
-                  <div className="flex gap-1.5 shrink-0">
-                    <button className="text-xs px-2.5 py-1.5 bg-green-400/10 text-green-400 rounded-lg font-medium">✓</button>
-                    <button className="text-xs px-2.5 py-1.5 bg-red-400/10 text-red-400 rounded-lg font-medium">✕</button>
-                    <button className="text-xs px-2.5 py-1.5 bg-secondary text-muted-foreground rounded-lg">Удалить</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          {tab === 'categories' && (
-            <div>
-              <div className="flex justify-end mb-3"><button className="text-sm bg-primary text-primary-foreground px-4 py-2 rounded-xl font-semibold">+ Добавить</button></div>
-              <div className="space-y-2">{CATEGORIES.map((cat) => (
-                <div key={cat.id} className="bg-card border border-border rounded-2xl overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-3">
-                    <button className="flex items-center gap-3 flex-1" onClick={() => setCatExpanded(catExpanded === cat.id ? null : cat.id)}>
-                      <span className="text-xl">{cat.icon}</span>
-                      <div className="text-left"><p className="font-semibold text-sm">{cat.name}</p><p className="text-xs text-muted-foreground">{cat.children.length} подкатегорий</p></div>
-                    </button>
-                    <div className="flex gap-2"><button className="text-xs text-primary font-medium">Ред.</button><button className="text-xs text-destructive font-medium">Удалить</button></div>
-                  </div>
-                  {catExpanded === cat.id && (
-                    <div className="border-t border-border px-4 py-2">
-                      {cat.children.map((sub) => <div key={sub.id} className="flex items-center justify-between py-1.5"><span className="text-sm text-muted-foreground">{sub.name}</span><div className="flex gap-2"><button className="text-xs text-primary">Ред.</button><button className="text-xs text-destructive">Удалить</button></div></div>)}
-                    </div>
-                  )}
-                </div>
-              ))}</div>
-            </div>
-          )}
-          {tab === 'subscriptions' && (
-            <div className="space-y-4">
-              <div className="bg-card border border-border rounded-2xl p-5">
-                <h3 className="font-bold mb-4">Настройки подписки</h3>
-                <div className="flex items-center justify-between mb-4">
-                  <div><p className="text-sm font-medium">Ежемесячная плата</p><p className="text-xs text-muted-foreground">Для продавцов</p></div>
-                  <button onClick={() => setSubEnabled(!subEnabled)} className={`w-12 h-6 rounded-full transition-colors relative ${subEnabled ? 'bg-primary' : 'bg-secondary'}`}>
-                    <span className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform shadow ${subEnabled ? 'translate-x-7' : 'translate-x-1'}`} />
-                  </button>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1"><label className="text-xs text-muted-foreground">Сумма, ₽/мес</label><input type="number" value={subPrice} onChange={(e) => setSubPrice(e.target.value)} className="w-full mt-1 bg-secondary text-foreground text-sm px-4 py-2.5 rounded-xl outline-none" /></div>
-                  <button className="mt-5 px-4 py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-xl">Сохранить</button>
-                </div>
-              </div>
-              <div className="bg-card border border-border rounded-2xl p-5">
-                <h3 className="font-bold mb-4">Продавцы</h3>
-                {MOCK_USERS.filter((u) => u.role === 'seller').map((u) => (
-                  <div key={u.id} className="flex items-center justify-between py-2">
-                    <div><p className="text-sm font-medium">{u.name}</p><p className="text-xs text-muted-foreground">{u.email}</p></div>
-                    <div className="flex items-center gap-3">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${u.id === 'u3' ? 'bg-red-400/10 text-red-400' : 'bg-green-400/10 text-green-400'}`}>{u.id === 'u3' ? 'Просрочена' : 'Активна'}</span>
-                      <button className="text-xs text-primary">Продлить</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {tab === 'reports' && (
-            <div className="bg-card border border-border rounded-2xl p-5">
-              <h3 className="font-bold mb-4">Генерация отчётов</h3>
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                {[{ label: 'По продавцам', desc: 'Топ по бронированиям' }, { label: 'По категориям', desc: 'Популярность' }, { label: 'По подпискам', desc: 'Доход платформы' }, { label: 'Активность', desc: 'Действия пользователей' }].map((r) => (
-                  <div key={r.label} className="bg-secondary rounded-xl p-3">
-                    <p className="text-sm font-semibold">{r.label}</p>
-                    <p className="text-xs text-muted-foreground mb-3">{r.desc}</p>
-                    <div className="flex gap-1.5">{['CSV', 'Excel', 'PDF'].map((fmt) => <button key={fmt} className="text-[11px] px-2 py-1 bg-card text-primary font-medium rounded-lg">{fmt}</button>)}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="border-t border-border pt-4">
-                <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Фильтры</p>
-                <div className="grid grid-cols-3 gap-2">
-                  <input type="date" className="bg-secondary text-foreground text-xs px-3 py-2 rounded-xl outline-none" />
-                  <input type="date" className="bg-secondary text-foreground text-xs px-3 py-2 rounded-xl outline-none" />
-                  <select className="bg-secondary text-foreground text-xs px-3 py-2 rounded-xl outline-none"><option>Все регионы</option><option>Москва</option><option>СПб</option></select>
-                </div>
-              </div>
-            </div>
-          )}
-          {tab === 'reviews' && (
-            <div className="space-y-3">
-              {[{ id: 'r1', author: 'Покупатель', lot: 'Ремонт квартир', text: 'Отличная работа!', rating: 5, flagged: false }, { id: 'r2', author: 'Клиент', lot: 'iPhone 14 Pro', text: 'Телефон не соответствовал описанию.', rating: 1, flagged: true }].map((rev) => (
-                <div key={rev.id} className={`bg-card border rounded-2xl p-4 ${rev.flagged ? 'border-red-400/30' : 'border-border'}`}>
-                  {rev.flagged && <div className="flex items-center gap-1.5 mb-2 text-red-400 text-xs font-semibold"><Icon name="Flag" size={12} />Жалоба</div>}
-                  <div className="flex justify-between mb-1">
-                    <p className="text-sm font-semibold">{rev.author}</p>
-                    <div className="flex items-center gap-0.5">{Array.from({ length: 5 }).map((_, i) => <Icon key={i} name="Star" size={12} className={i < rev.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'} />)}</div>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-1">Лот: {rev.lot}</p>
-                  <p className="text-sm mb-3">{rev.text}</p>
-                  <button className="text-xs px-3 py-1.5 bg-red-400/10 text-red-400 rounded-lg font-medium">Удалить</button>
-                </div>
-              ))}
-            </div>
-          )}
-          {tab === 'bookings' && (
-            <div className="space-y-3">
-              {[{ id: 'ab1', buyer: 'Алина Иванова', seller: 'СтройМастер', lot: 'Ремонт квартир', status: 'confirmed', date: '2026-05-15' }, { id: 'ab2', buyer: 'Клиент 2', seller: 'Алексей М.', lot: 'iPhone 14 Pro', status: 'pending', date: '2026-05-14' }].map((b) => (
-                <div key={b.id} className="bg-card border border-border rounded-2xl p-4">
-                  <div className="flex justify-between mb-2">
-                    <p className="font-semibold text-sm">{b.lot}</p>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${b.status === 'confirmed' ? 'bg-green-400/10 text-green-400' : 'bg-yellow-400/10 text-yellow-400'}`}>{b.status === 'confirmed' ? 'Подтверждено' : 'Ожидает'}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">Покупатель: {b.buyer} · Продавец: {b.seller} · {b.date}</p>
-                  <select className="mt-3 text-xs bg-secondary text-foreground px-3 py-1.5 rounded-lg outline-none">
-                    <option>Сменить статус...</option>
-                    {['pending', 'confirmed', 'rejected', 'completed', 'cancelled'].map((s) => <option key={s}>{s}</option>)}
-                  </select>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── ThemeSwitcher ────────────────────────────────────────────────────────────
-function ThemeSwitcher({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
-  return (
-    <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm p-1 rounded-xl border border-white/10">
-      {THEMES.map((t) => (
-        <button
-          key={t.id}
-          onClick={() => setTheme(t.id)}
-          title={t.name}
-          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-            theme === t.id
-              ? 'bg-white/20 text-white shadow-sm scale-105'
-              : 'text-white/60 hover:text-white hover:bg-white/10'
-          }`}
-        >
-          <span>{t.emoji}</span>
-          <span className="hidden sm:block">{t.name}</span>
-        </button>
-      ))}
-    </div>
-  );
-}
-
-// ─── Auth ─────────────────────────────────────────────────────────────────────
-const AUTH_URL = 'https://functions.poehali.dev/46b78309-012f-4fb6-aebc-43255d00f5fc';
-
+// ─── AuthModal ────────────────────────────────────────────────────────────────
 function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u: AuthUser) => void }) {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'buyer' });
@@ -1017,10 +748,8 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u:
         <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground">
           <Icon name="X" size={18} />
         </button>
-
         <h2 className="text-xl font-black text-foreground mb-1">{mode === 'login' ? 'Войти в ЛИКВИД' : 'Регистрация'}</h2>
         <p className="text-sm text-muted-foreground mb-6">{mode === 'login' ? 'Добро пожаловать назад!' : 'Создайте аккаунт бесплатно'}</p>
-
         <div className="flex gap-2 mb-5 bg-secondary p-1 rounded-xl">
           {(['login', 'register'] as const).map((m) => (
             <button key={m} onClick={() => { setMode(m); setError(''); }} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${mode === m ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>
@@ -1028,7 +757,6 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u:
             </button>
           ))}
         </div>
-
         <div className="space-y-3">
           {mode === 'register' && (
             <div>
@@ -1052,9 +780,7 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u:
             </div>
           )}
         </div>
-
         {error && <p className="mt-3 text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>}
-
         <button onClick={submit} disabled={loading} className="w-full mt-5 bg-primary hover:bg-primary/90 disabled:opacity-50 text-primary-foreground font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
           {loading && <Icon name="Loader2" size={16} className="animate-spin" />}
           {mode === 'login' ? 'Войти' : 'Создать аккаунт'}
