@@ -995,10 +995,13 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u:
     const body = mode === 'login'
       ? { email: form.email, password: form.password }
       : { email: form.email, password: form.password, name: form.name, role: form.role };
+    let statusOk = false;
     fetch(AUTH_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-      .then((res) => res.json().then((data: AuthUser & { error?: string }) => {
-        if (!res.ok) { setError(data.error || 'Ошибка'); } else { onSuccess(data); }
-      }))
+      .then((res) => { statusOk = res.ok; return res.json(); })
+      .then((data: Record<string, string>) => {
+        if (!statusOk) { setError(data['error'] || 'Ошибка'); }
+        else { onSuccess({ user_id: data['user_id'] || '', name: data['name'] || '', role: data['role'] || 'buyer', token: data['token'] || '' }); }
+      })
       .catch(() => setError('Ошибка соединения'))
       .finally(() => setLoading(false));
   };
@@ -1039,7 +1042,7 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u:
           </div>
           {mode === 'register' && (
             <div className="flex gap-2">
-              {([{ v: 'buyer', l: '🛍 Покупатель' }, { v: 'seller', l: '🏪 Продавец' }] as const).map((r) => (
+              {[{ v: 'buyer', l: '🛍 Покупатель' }, { v: 'seller', l: '🏪 Продавец' }].map((r) => (
                 <button key={r.v} onClick={() => setForm({ ...form, role: r.v })} className={`flex-1 py-2.5 text-sm font-semibold rounded-xl border transition-colors ${form.role === r.v ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}>{r.l}</button>
               ))}
             </div>
