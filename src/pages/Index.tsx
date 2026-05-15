@@ -68,6 +68,14 @@ const MOCK_USERS = [
 
 const HERO_IMAGE = 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/2748104d-bbdd-4fdf-9410-046de739311f.jpg';
 
+// ─── Темы ────────────────────────────────────────────────────────────────────
+type Theme = 'night' | 'day' | 'sunset';
+const THEMES: { id: Theme; label: string; name: string; img: string }[] = [
+  { id: 'night',  label: '🌑', name: 'Ночь',  img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/1f4055ac-0a87-4fa9-97ac-81cac0f8bbac.jpg' },
+  { id: 'day',    label: '☀️', name: 'День',   img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/0fc34ad0-9e2a-40f9-8080-2af42eaccfed.jpg' },
+  { id: 'sunset', label: '🌆', name: 'Закат', img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/07d59aca-ed0a-4ed3-86ed-9cf315604f6e.jpg' },
+];
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function fmtPrice(price: number): string {
   if (price >= 1_000_000) return `${(price / 1_000_000).toFixed(1)} млн ₽`;
@@ -936,24 +944,20 @@ function AdminPage() {
 }
 
 // ─── ThemeSwitcher ────────────────────────────────────────────────────────────
-type Theme = 'night' | 'day' | 'sunset';
-const THEMES: { id: Theme; label: string }[] = [
-  { id: 'night', label: '🌑' },
-  { id: 'day',   label: '☀️' },
-  { id: 'sunset',label: '🌆' },
-];
-
 function ThemeSwitcher({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
   return (
-    <div className="flex items-center gap-1 bg-secondary/60 p-1 rounded-xl border border-border/40">
+    <div className="flex items-center gap-2">
       {THEMES.map((t) => (
         <button
           key={t.id}
           onClick={() => setTheme(t.id)}
-          title={t.id === 'night' ? 'Ночь' : t.id === 'day' ? 'День' : 'Закат'}
-          className={`w-7 h-7 rounded-lg text-sm flex items-center justify-center transition-all ${theme === t.id ? 'bg-card shadow scale-110' : 'opacity-50 hover:opacity-80'}`}
+          title={t.name}
+          className={`relative overflow-hidden rounded-xl transition-all duration-300 ${theme === t.id ? 'ring-2 ring-white scale-105 shadow-lg' : 'opacity-60 hover:opacity-90 hover:scale-102'}`}
+          style={{ width: 64, height: 44 }}
         >
-          {t.label}
+          <img src={t.img} alt={t.name} className="w-full h-full object-cover" />
+          <div className={`absolute inset-0 ${theme === t.id ? 'bg-black/10' : 'bg-black/30'}`} />
+          <span className="absolute bottom-1 left-0 right-0 text-center text-[10px] font-bold text-white drop-shadow">{t.name}</span>
         </button>
       ))}
     </div>
