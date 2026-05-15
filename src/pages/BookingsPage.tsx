@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/icon';
-import { MOCK_BOOKINGS, BOOKING_STATUS_MAP } from '@/data/mockLots';
+import { MOCK_BOOKINGS, BOOKING_STATUS_MAP, type BookingStatus } from '@/data/mockLots';
 
 interface BookingsPageProps {
   onNavigate: (page: string) => void;
@@ -44,7 +44,7 @@ export default function BookingsPage({ onNavigate }: BookingsPageProps) {
       ) : (
         <div className="space-y-3">
           {items.map((booking) => {
-            const statusInfo = BOOKING_STATUS_MAP[booking.status as keyof typeof BOOKING_STATUS_MAP] || BOOKING_STATUS_MAP.pending;
+            const statusInfo = BOOKING_STATUS_MAP[booking.status as BookingStatus] || BOOKING_STATUS_MAP.pending;
             return (
               <div key={booking.id} className="bg-card border border-border rounded-2xl overflow-hidden">
                 <div className="flex gap-3 p-4">

@@ -148,25 +148,35 @@ export const MOCK_LOTS: Lot[] = [
   },
 ];
 
-export const MOCK_BOOKINGS = [
+export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'rejected';
+
+export interface Booking {
+  id: string;
+  lot: Lot;
+  status: BookingStatus;
+  createdAt: string;
+  message: string;
+}
+
+export const MOCK_BOOKINGS: Booking[] = [
   {
     id: 'b1',
     lot: MOCK_LOTS[0],
-    status: 'pending' as const,
+    status: 'pending',
     createdAt: '2026-05-15',
     message: 'Хочу забронировать, готов к встрече в любое время.',
   },
   {
     id: 'b2',
     lot: MOCK_LOTS[1],
-    status: 'confirmed' as const,
+    status: 'confirmed',
     createdAt: '2026-05-12',
     message: 'Нужен ремонт 65 м², два санузла.',
   },
   {
     id: 'b3',
     lot: MOCK_LOTS[5],
-    status: 'completed' as const,
+    status: 'completed',
     createdAt: '2026-04-20',
     message: 'Машина понравилась, готов к сделке.',
   },
