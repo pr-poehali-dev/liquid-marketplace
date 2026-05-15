@@ -66,17 +66,15 @@ const MOCK_USERS = [
   { id: 'u4', name: 'AutoElite', email: 'auto@elite.ru', role: 'seller', status: 'active', lots: 28, bookings: 145 },
 ];
 
-const HERO_IMAGE = 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/2748104d-bbdd-4fdf-9410-046de739311f.jpg';
-
 // ─── Auth types ──────────────────────────────────────────────────────────────
 interface AuthUser { user_id: string; name: string; role: string; token: string }
 
 // ─── Темы ────────────────────────────────────────────────────────────────────
 type Theme = 'night' | 'day' | 'sunset';
-const THEMES: { id: Theme; name: string; img: string }[] = [
-  { id: 'night',  name: 'Ночь',  img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/1f4055ac-0a87-4fa9-97ac-81cac0f8bbac.jpg' },
-  { id: 'day',    name: 'День',  img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/0fc34ad0-9e2a-40f9-8080-2af42eaccfed.jpg' },
-  { id: 'sunset', name: 'Закат', img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/07d59aca-ed0a-4ed3-86ed-9cf315604f6e.jpg' },
+const THEMES: { id: Theme; emoji: string; name: string; hero: string }[] = [
+  { id: 'night',  emoji: '🌑', name: 'Ночь',  hero: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/2748104d-bbdd-4fdf-9410-046de739311f.jpg' },
+  { id: 'day',    emoji: '☀️', name: 'День',  hero: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/0fc34ad0-9e2a-40f9-8080-2af42eaccfed.jpg' },
+  { id: 'sunset', emoji: '🌅', name: 'Закат', hero: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/07d59aca-ed0a-4ed3-86ed-9cf315604f6e.jpg' },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -249,10 +247,12 @@ function HomePage({ nav, onOpen, onFav, theme, setTheme }: { nav: (p: string) =>
     );
   };
 
+  const currentTheme = THEMES.find((t) => t.id === theme) ?? THEMES[0];
+
   return (
     <div>
       <div className="relative h-72 md:h-96 overflow-hidden">
-        <img src={HERO_IMAGE} alt="ЛИКВИД" className="w-full h-full object-cover" />
+        <img src={currentTheme.hero} alt="ЛИКВИД" className="w-full h-full object-cover transition-all duration-700" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-background" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-3xl md:text-5xl font-black text-white mb-2 tracking-tight">ЛИКВИД</h1>
@@ -960,18 +960,20 @@ function AdminPage() {
 // ─── ThemeSwitcher ────────────────────────────────────────────────────────────
 function ThemeSwitcher({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm p-1 rounded-xl border border-white/10">
       {THEMES.map((t) => (
         <button
           key={t.id}
           onClick={() => setTheme(t.id)}
           title={t.name}
-          className={`relative overflow-hidden rounded-xl transition-all duration-300 ${theme === t.id ? 'ring-2 ring-white scale-105 shadow-lg' : 'opacity-60 hover:opacity-90 hover:scale-102'}`}
-          style={{ width: 64, height: 44 }}
+          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+            theme === t.id
+              ? 'bg-white/20 text-white shadow-sm scale-105'
+              : 'text-white/60 hover:text-white hover:bg-white/10'
+          }`}
         >
-          <img src={t.img} alt={t.name} className="w-full h-full object-cover" />
-          <div className={`absolute inset-0 ${theme === t.id ? 'bg-black/10' : 'bg-black/30'}`} />
-          <span className="absolute bottom-1 left-0 right-0 text-center text-[10px] font-bold text-white drop-shadow">{t.name}</span>
+          <span>{t.emoji}</span>
+          <span className="hidden sm:block">{t.name}</span>
         </button>
       ))}
     </div>
@@ -1037,7 +1039,7 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u:
           </div>
           <div>
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Пароль</label>
-            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="••••••••" onKeyDown={(e) => e.key === 'Enter' && submit()} className="w-full mt-1 bg-secondary text-foreground text-sm px-4 py-3 rounded-xl outline-none border border-transparent focus:border-primary placeholder:text-muted-foreground" />
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="••••••••" onKeyDown={(e) => { if (e.key === 'Enter') submit(); }} className="w-full mt-1 bg-secondary text-foreground text-sm px-4 py-3 rounded-xl outline-none border border-transparent focus:border-primary placeholder:text-muted-foreground" />
           </div>
           {mode === 'register' && (
             <div className="flex gap-2">
