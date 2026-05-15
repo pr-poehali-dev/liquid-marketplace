@@ -989,22 +989,18 @@ function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u:
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const submit = async () => {
+  const submit = () => {
     setError(''); setLoading(true);
-    try {
-      const path = mode === 'login' ? '/login' : '/register';
-      const body = mode === 'login'
-        ? { email: form.email, password: form.password }
-        : { email: form.email, password: form.password, name: form.name, role: form.role };
-      const res = await fetch(AUTH_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error || 'Ошибка'); return; }
-      onSuccess(data as AuthUser);
-    } catch (_e) {
-      setError('Ошибка соединения');
-    } finally {
-      setLoading(false);
-    }
+    const path = mode === 'login' ? '/login' : '/register';
+    const body = mode === 'login'
+      ? { email: form.email, password: form.password }
+      : { email: form.email, password: form.password, name: form.name, role: form.role };
+    fetch(AUTH_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then((res) => res.json().then((data: AuthUser & { error?: string }) => {
+        if (!res.ok) { setError(data.error || 'Ошибка'); } else { onSuccess(data); }
+      }))
+      .catch(() => setError('Ошибка соединения'))
+      .finally(() => setLoading(false));
   };
 
   return (
