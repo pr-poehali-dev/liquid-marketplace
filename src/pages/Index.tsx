@@ -217,7 +217,7 @@ function BottomNav({ page, nav }: { page: string; nav: (p: string) => void }) {
 }
 
 // ─── HomePage ─────────────────────────────────────────────────────────────────
-function HomePage({ nav, onOpen, onFav }: { nav: (p: string) => void; onOpen: (l: Lot) => void; onFav: (id: string) => void }) {
+function HomePage({ nav, onOpen, onFav, theme, setTheme }: { nav: (p: string) => void; onOpen: (l: Lot) => void; onFav: (id: string) => void; theme: Theme; setTheme: (t: Theme) => void }) {
   const [geoActive, setGeoActive] = useState(false);
   const [geoLabel, setGeoLabel] = useState('Рядом');
 
@@ -236,7 +236,7 @@ function HomePage({ nav, onOpen, onFav }: { nav: (p: string) => void; onOpen: (l
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-background" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-3xl md:text-5xl font-black text-white mb-2 tracking-tight">ЛИКВИД</h1>
-          <p className="text-white/80 text-sm md:text-base mb-6">Маркетплейс товаров и услуг</p>
+          <p className="text-white/80 text-sm md:text-base mb-6">Маркетплейс, где ничто не простаивает</p>
           <div className="w-full max-w-lg bg-card/90 backdrop-blur-md rounded-2xl p-1 flex gap-2 border border-border/40">
             <button onClick={() => nav('search')} className="flex-1 flex items-center gap-2 px-4 py-3 text-muted-foreground text-sm">
               <Icon name="Search" size={16} /><span>Что ищете?</span>
@@ -244,6 +244,9 @@ function HomePage({ nav, onOpen, onFav }: { nav: (p: string) => void; onOpen: (l
             <button onClick={requestGeo} className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${geoActive ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}>
               <Icon name="MapPin" size={14} /><span className="hidden sm:block">{geoLabel}</span>
             </button>
+          </div>
+          <div className="mt-4">
+            <ThemeSwitcher theme={theme} setTheme={setTheme} />
           </div>
         </div>
       </div>
@@ -634,7 +637,7 @@ function NotificationsPage() {
 // ─── SellerPage ───────────────────────────────────────────────────────────────
 function SellerPage() {
   const [tab, setTab] = useState<'lots' | 'create' | 'stats'>('lots');
-  const [form, setForm] = useState({ title: '', description: '', price: '', category: '', subcategory: '', type: 'product', location: '' });
+  const [form, setForm] = useState({ title: '', description: '', price: '', category: '', subcategory: '', type: 'product', location: '', days: '7' });
   const selCat = CATEGORIES.find((c) => c.id === form.category);
 
   return (
@@ -691,6 +694,14 @@ function SellerPage() {
               </select>
             </div>
           )}
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Срок размещения</label>
+            <select value={form.days} onChange={(e) => setForm({ ...form, days: e.target.value })} className="w-full mt-1 bg-secondary text-foreground text-sm px-4 py-3 rounded-xl outline-none border border-transparent focus:border-primary">
+              {Array.from({ length: 30 }, (_, i) => i + 1).map((d) => (
+                <option key={d} value={String(d)}>{d} {d === 1 ? 'день' : d < 5 ? 'дня' : 'дней'}</option>
+              ))}
+            </select>
+          </div>
           <div className="border-2 border-dashed border-border rounded-xl p-6 text-center">
             <Icon name="Upload" size={24} className="mx-auto mb-2 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">Добавить фотографии</p>
@@ -924,6 +935,31 @@ function AdminPage() {
   );
 }
 
+// ─── ThemeSwitcher ────────────────────────────────────────────────────────────
+type Theme = 'night' | 'day' | 'sunset';
+const THEMES: { id: Theme; label: string }[] = [
+  { id: 'night', label: '🌑' },
+  { id: 'day',   label: '☀️' },
+  { id: 'sunset',label: '🌆' },
+];
+
+function ThemeSwitcher({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
+  return (
+    <div className="flex items-center gap-1 bg-secondary/60 p-1 rounded-xl border border-border/40">
+      {THEMES.map((t) => (
+        <button
+          key={t.id}
+          onClick={() => setTheme(t.id)}
+          title={t.id === 'night' ? 'Ночь' : t.id === 'day' ? 'День' : 'Закат'}
+          className={`w-7 h-7 rounded-lg text-sm flex items-center justify-center transition-all ${theme === t.id ? 'bg-card shadow scale-110' : 'opacity-50 hover:opacity-80'}`}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // ─── Main App ─────────────────────────────────────────────────────────────────
 type Page = 'home' | 'search' | 'categories' | 'profile' | 'bookings' | 'favorites' | 'chat' | 'notifications' | 'seller' | 'admin' | 'lots';
 
@@ -931,6 +967,12 @@ export default function Index() {
   const [page, setPage] = useState<Page>('home');
   const [openLot, setOpenLot] = useState<Lot | null>(null);
   const [favs, setFavs] = useState<string[]>(['2', '4']);
+  const [theme, setTheme] = useState<Theme>('night');
+
+  const applyTheme = (t: Theme) => {
+    setTheme(t);
+    document.documentElement.setAttribute('data-theme', t);
+  };
 
   const nav = (p: string) => setPage(p as Page);
   const toggleFav = (id: string) => setFavs((prev) => prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]);
@@ -943,7 +985,7 @@ export default function Index() {
 
   const renderPage = () => {
     switch (page) {
-      case 'home': return <HomePage nav={nav} onOpen={openModal} onFav={toggleFav} />;
+      case 'home': return <HomePage nav={nav} onOpen={openModal} onFav={toggleFav} theme={theme} setTheme={applyTheme} />;
       case 'search': case 'lots': return <SearchPage onOpen={openModal} onFav={toggleFav} />;
       case 'categories': return <CategoriesPage nav={nav} />;
       case 'profile': return <ProfilePage nav={nav} />;
@@ -953,7 +995,7 @@ export default function Index() {
       case 'notifications': return <NotificationsPage />;
       case 'seller': return <SellerPage />;
       case 'admin': return <AdminPage />;
-      default: return <HomePage nav={nav} onOpen={openModal} onFav={toggleFav} />;
+      default: return <HomePage nav={nav} onOpen={openModal} onFav={toggleFav} theme={theme} setTheme={applyTheme} />;
     }
   };
 
