@@ -330,7 +330,7 @@ function SearchPage({ onOpen, onFav }: { onOpen: (l: Lot) => void; onFav: (id: s
   const filtered = LOTS.filter((l) => {
     if (query && !l.title.toLowerCase().includes(query.toLowerCase())) return false;
     if (cat && l.category !== cat) return false;
-    if (type !== 'all' && l.type !== type) return false;
+    if (type !== 'all' && l.type !== (type as 'product' | 'service')) return false;
     if (priceFrom && l.price < Number(priceFrom)) return false;
     if (priceTo && l.price > Number(priceTo)) return false;
     if (rating && l.seller.rating < rating) return false;
@@ -378,7 +378,11 @@ function SearchPage({ onOpen, onFav }: { onOpen: (l: Lot) => void; onFav: (id: s
             </div>
             <div>
               <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Сортировка</p>
-              {[{ v: 'new', l: 'Новые' }, { v: 'price_asc', l: 'Цена ↑' }, { v: 'price_desc', l: 'Цена ↓' }, { v: 'rating', l: 'Рейтинг' }].map((s) => <button key={s.v} onClick={() => setSort(s.v as typeof sort)} className={`block w-full text-xs px-3 py-1.5 rounded-lg font-medium text-left mb-1 ${sort === s.v ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}>{s.l}</button>)}
+              {(['new', 'price_asc', 'price_desc', 'rating'] as const).map((v) => (
+                <button key={v} onClick={() => setSort(v)} className={`block w-full text-xs px-3 py-1.5 rounded-lg font-medium text-left mb-1 ${sort === v ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}>
+                  {v === 'new' ? 'Новые' : v === 'price_asc' ? 'Цена ↑' : v === 'price_desc' ? 'Цена ↓' : 'Рейтинг'}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -666,8 +670,8 @@ function SellerPage() {
     <div className="max-w-3xl mx-auto px-4 py-6">
       <h1 className="text-2xl font-black mb-5">Кабинет продавца</h1>
       <div className="flex gap-2 mb-6 bg-secondary p-1 rounded-xl">
-        {([{ id: 'lots' as const, label: 'Мои лоты' }, { id: 'create' as const, label: '+ Новый лот' }, { id: 'stats' as const, label: 'Статистика' }]).map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${tab === t.id ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>{t.label}</button>
+        {[{ id: 'lots', label: 'Мои лоты' }, { id: 'create', label: '+ Новый лот' }, { id: 'stats', label: 'Статистика' }].map((t) => (
+          <button key={t.id} onClick={() => setTab(t.id as 'lots' | 'create' | 'stats')} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${tab === t.id ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>{t.label}</button>
         ))}
       </div>
       {tab === 'lots' && (
@@ -686,7 +690,7 @@ function SellerPage() {
       {tab === 'create' && (
         <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
           <div className="flex gap-2">
-            {(['product', 'service'] as const).map((t) => (
+            {['product', 'service'].map((t) => (
               <button key={t} onClick={() => setForm({ ...form, type: t })} className={`flex-1 py-2.5 text-sm font-semibold rounded-xl border transition-colors ${form.type === t ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground'}`}>{t === 'product' ? '📦 Товар' : '🔧 Услуга'}</button>
             ))}
           </div>
