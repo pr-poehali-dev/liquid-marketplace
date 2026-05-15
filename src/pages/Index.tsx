@@ -5,7 +5,7 @@ import type { LucideProps } from 'lucide-react';
 // ─── Icon ────────────────────────────────────────────────────────────────────
 const Icon: FC<LucideProps & { name: string; fallback?: string }> = ({ name, fallback = 'CircleAlert', ...props }) => {
   const C = (LucideIcons as Record<string, FC<LucideProps>>)[name]
-    || (LucideIcons as Record<string, FC<LucideProps>>)[fallback];
+    ?? (LucideIcons as Record<string, FC<LucideProps>>)[fallback];
   if (!C) return null;
   return <C {...props} />;
 };
@@ -13,7 +13,7 @@ const Icon: FC<LucideProps & { name: string; fallback?: string }> = ({ name, fal
 // ─── Data ────────────────────────────────────────────────────────────────────
 interface Lot {
   id: string; title: string; price: number; priceLabel?: string;
-  category: string; subcategory: string; type: 'product' | 'service';
+  category: string; type: 'product' | 'service';
   seller: { id: string; name: string; rating: number; reviewCount: number };
   images: string[]; description: string; location: string;
   createdAt: string; status: string; isFavorite?: boolean; views: number;
@@ -35,14 +35,14 @@ const CATEGORIES: Category[] = [
 ];
 
 const LOTS: Lot[] = [
-  { id: '1', title: 'iPhone 14 Pro 256GB', price: 65000, category: 'electronics', subcategory: 'phones', type: 'product', seller: { id: 's1', name: 'Алексей М.', rating: 4.8, reviewCount: 47 }, images: ['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400'], description: 'Продаю iPhone 14 Pro. Без царапин, полный комплект.', location: 'Москва', createdAt: '2026-05-14', status: 'active', views: 342 },
-  { id: '2', title: 'Ремонт квартир под ключ', price: 3500, priceLabel: 'от 3 500 ₽/м²', category: 'services', subcategory: 'repair', type: 'service', seller: { id: 's2', name: 'СтройМастер', rating: 4.9, reviewCount: 128 }, images: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400'], description: 'Профессиональный ремонт квартир. Опыт 12 лет.', location: 'Москва', createdAt: '2026-05-13', status: 'active', views: 891 },
-  { id: '3', title: '2-комнатная квартира, 58 м², Замоскворечье', price: 14500000, category: 'realty', subcategory: 'apartments', type: 'product', seller: { id: 's3', name: 'Мария К.', rating: 4.7, reviewCount: 23 }, images: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400'], description: 'Светлая квартира с видом на набережную.', location: 'Москва, ЦАО', createdAt: '2026-05-12', status: 'active', views: 1240 },
-  { id: '4', title: 'MacBook Pro 16" M3 Max', price: 289000, category: 'electronics', subcategory: 'laptops', type: 'product', seller: { id: 's4', name: 'TechStore PRO', rating: 4.6, reviewCount: 89 }, images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400'], description: 'MacBook Pro 16", M3 Max, 48 ГБ ОЗУ.', location: 'Санкт-Петербург', createdAt: '2026-05-11', status: 'active', views: 567 },
-  { id: '5', title: 'Юридические услуги для бизнеса', price: 5000, priceLabel: 'от 5 000 ₽/час', category: 'services', subcategory: 'legal', type: 'service', seller: { id: 's5', name: 'Адвокат Петров', rating: 5.0, reviewCount: 64 }, images: ['https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400'], description: 'Регистрация ООО, договоры. Стаж 15 лет.', location: 'Москва', createdAt: '2026-05-10', status: 'active', views: 423 },
-  { id: '6', title: 'Toyota Camry 2022, 2.5 Hybrid', price: 3250000, category: 'transport', subcategory: 'cars', type: 'product', seller: { id: 's6', name: 'AutoElite', rating: 4.5, reviewCount: 31 }, images: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=400'], description: 'Один владелец, пробег 38 000 км.', location: 'Казань', createdAt: '2026-05-09', status: 'active', views: 789 },
-  { id: '7', title: 'Профессиональная фотосессия', price: 8000, priceLabel: '8 000 ₽/сессия', category: 'services', subcategory: 'photo', type: 'service', seller: { id: 's7', name: 'Фотограф Анна', rating: 4.9, reviewCount: 112 }, images: ['https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400'], description: 'Портретная, деловая съёмка. Обработка 50+ фото.', location: 'Москва', createdAt: '2026-05-08', status: 'active', views: 345 },
-  { id: '8', title: 'Диван угловой, б/у 1 год', price: 25000, category: 'home', subcategory: 'furniture', type: 'product', seller: { id: 's8', name: 'Игорь Р.', rating: 4.3, reviewCount: 8 }, images: ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'], description: 'Угловой диван серого цвета, 280×180 см.', location: 'Екатеринбург', createdAt: '2026-05-07', status: 'active', views: 198 },
+  { id: '1', title: 'iPhone 14 Pro 256GB', price: 65000, category: 'electronics', type: 'product', seller: { id: 's1', name: 'Алексей М.', rating: 4.8, reviewCount: 47 }, images: ['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400'], description: 'Продаю iPhone 14 Pro. Без царапин, полный комплект.', location: 'Москва', createdAt: '2026-05-14', status: 'active', views: 342 },
+  { id: '2', title: 'Ремонт квартир под ключ', price: 3500, priceLabel: 'от 3 500 ₽/м²', category: 'services', type: 'service', seller: { id: 's2', name: 'СтройМастер', rating: 4.9, reviewCount: 128 }, images: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400'], description: 'Профессиональный ремонт квартир. Опыт 12 лет.', location: 'Москва', createdAt: '2026-05-13', status: 'active', views: 891 },
+  { id: '3', title: '2-комнатная квартира, 58 м², Замоскворечье', price: 14500000, category: 'realty', type: 'product', seller: { id: 's3', name: 'Мария К.', rating: 4.7, reviewCount: 23 }, images: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400'], description: 'Светлая квартира с видом на набережную.', location: 'Москва, ЦАО', createdAt: '2026-05-12', status: 'active', views: 1240 },
+  { id: '4', title: 'MacBook Pro 16" M3 Max', price: 289000, category: 'electronics', type: 'product', seller: { id: 's4', name: 'TechStore PRO', rating: 4.6, reviewCount: 89 }, images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400'], description: 'MacBook Pro 16", M3 Max, 48 ГБ ОЗУ.', location: 'Санкт-Петербург', createdAt: '2026-05-11', status: 'active', views: 567 },
+  { id: '5', title: 'Юридические услуги для бизнеса', price: 5000, priceLabel: 'от 5 000 ₽/час', category: 'services', type: 'service', seller: { id: 's5', name: 'Адвокат Петров', rating: 5.0, reviewCount: 64 }, images: ['https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400'], description: 'Регистрация ООО, договоры. Стаж 15 лет.', location: 'Москва', createdAt: '2026-05-10', status: 'active', views: 423 },
+  { id: '6', title: 'Toyota Camry 2022, 2.5 Hybrid', price: 3250000, category: 'transport', type: 'product', seller: { id: 's6', name: 'AutoElite', rating: 4.5, reviewCount: 31 }, images: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=400'], description: 'Один владелец, пробег 38 000 км.', location: 'Казань', createdAt: '2026-05-09', status: 'active', views: 789 },
+  { id: '7', title: 'Профессиональная фотосессия', price: 8000, priceLabel: '8 000 ₽/сессия', category: 'services', type: 'service', seller: { id: 's7', name: 'Фотограф Анна', rating: 4.9, reviewCount: 112 }, images: ['https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400'], description: 'Портретная, деловая съёмка. Обработка 50+ фото.', location: 'Москва', createdAt: '2026-05-08', status: 'active', views: 345 },
+  { id: '8', title: 'Диван угловой, б/у 1 год', price: 25000, category: 'home', type: 'product', seller: { id: 's8', name: 'Игорь Р.', rating: 4.3, reviewCount: 8 }, images: ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'], description: 'Угловой диван серого цвета, 280×180 см.', location: 'Екатеринбург', createdAt: '2026-05-07', status: 'active', views: 198 },
 ];
 
 const BOOKINGS = [
@@ -68,12 +68,15 @@ const MOCK_USERS = [
 
 const HERO_IMAGE = 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/2748104d-bbdd-4fdf-9410-046de739311f.jpg';
 
+// ─── Auth types ──────────────────────────────────────────────────────────────
+interface AuthUser { user_id: string; name: string; role: string; token: string }
+
 // ─── Темы ────────────────────────────────────────────────────────────────────
 type Theme = 'night' | 'day' | 'sunset';
-const THEMES: { id: Theme; label: string; name: string; img: string }[] = [
-  { id: 'night',  label: '🌑', name: 'Ночь',  img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/1f4055ac-0a87-4fa9-97ac-81cac0f8bbac.jpg' },
-  { id: 'day',    label: '☀️', name: 'День',   img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/0fc34ad0-9e2a-40f9-8080-2af42eaccfed.jpg' },
-  { id: 'sunset', label: '🌆', name: 'Закат', img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/07d59aca-ed0a-4ed3-86ed-9cf315604f6e.jpg' },
+const THEMES: { id: Theme; name: string; img: string }[] = [
+  { id: 'night',  name: 'Ночь',  img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/1f4055ac-0a87-4fa9-97ac-81cac0f8bbac.jpg' },
+  { id: 'day',    name: 'День',  img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/0fc34ad0-9e2a-40f9-8080-2af42eaccfed.jpg' },
+  { id: 'sunset', name: 'Закат', img: 'https://cdn.poehali.dev/projects/50dbf663-5f48-42ee-8380-d0d49005bea8/files/07d59aca-ed0a-4ed3-86ed-9cf315604f6e.jpg' },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -157,7 +160,8 @@ function LotModal({ lot, onClose, onBook }: { lot: Lot | null; onClose: () => vo
 }
 
 // ─── Header ──────────────────────────────────────────────────────────────────
-function Header({ page, nav }: { page: string; nav: (p: string) => void }) {
+function Header({ page, nav, user, onAuthClick }: { page: string; nav: (p: string) => void; user: AuthUser | null; onAuthClick: () => void }) {
+  const initials = user ? user.name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2) : null;
   return (
     <header className="sticky top-0 z-50 backdrop-blur bg-background/80 border-b border-border/60">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
@@ -175,7 +179,15 @@ function Header({ page, nav }: { page: string; nav: (p: string) => void }) {
               {item.badge && <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">{item.badge}</span>}
             </button>
           ))}
-          <button onClick={() => nav('profile')} className={`ml-1 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold transition-colors ${page === 'profile' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground hover:bg-secondary/80'}`}>АИ</button>
+          {user ? (
+            <button onClick={() => nav('profile')} className={`ml-1 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold transition-colors ${page === 'profile' ? 'bg-primary text-primary-foreground' : 'bg-primary/20 text-primary hover:bg-primary/30'}`} title={user.name}>
+              {initials}
+            </button>
+          ) : (
+            <button onClick={onAuthClick} className="ml-1 flex items-center gap-1.5 px-3 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-xl transition-colors">
+              <Icon name="LogIn" size={15} /><span className="hidden sm:block">Войти</span>
+            </button>
+          )}
         </nav>
       </div>
     </header>
@@ -412,30 +424,26 @@ function CategoriesPage({ nav }: { nav: (p: string) => void }) {
 }
 
 // ─── ProfilePage ──────────────────────────────────────────────────────────────
-function ProfilePage({ nav }: { nav: (p: string) => void }) {
-  const user = { name: 'Алина Иванова', email: 'alina@example.com', phone: '+7 (912) 345-67-89', city: 'Москва', joined: 'Май 2025', rating: 4.7, reviews: 12 };
+function ProfilePage({ nav, user, onLogout }: { nav: (p: string) => void; user: AuthUser | null; onLogout: () => void }) {
+  const displayName = user?.name || 'Гость';
+  const initials = displayName.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2);
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
       <div className="bg-card border border-border rounded-2xl p-6 mb-4 text-center">
         <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-primary/30">
-          <span className="text-3xl font-black text-primary">{user.name.charAt(0)}</span>
+          <span className="text-3xl font-black text-primary">{initials}</span>
         </div>
-        <h2 className="text-xl font-bold mb-1">{user.name}</h2>
-        <p className="text-muted-foreground text-sm">{user.city} · На ЛИКВИД с {user.joined}</p>
-        <div className="flex items-center justify-center gap-1 mt-2">
+        <h2 className="text-xl font-bold mb-1">{displayName}</h2>
+        {user && (
+          <span className={`inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1 ${user.role === 'seller' ? 'bg-primary/20 text-primary' : 'bg-secondary text-muted-foreground'}`}>
+            {user.role === 'seller' ? 'Продавец' : user.role === 'admin' ? 'Администратор' : 'Покупатель'}
+          </span>
+        )}
+        <div className="flex items-center justify-center gap-1 mt-3">
           <Icon name="Star" size={14} className="text-yellow-400 fill-yellow-400" />
-          <span className="text-sm font-semibold">{user.rating}</span>
-          <span className="text-muted-foreground text-xs">({user.reviews} отзывов)</span>
+          <span className="text-sm font-semibold">4.7</span>
+          <span className="text-muted-foreground text-xs">(12 отзывов)</span>
         </div>
-      </div>
-      <div className="bg-card border border-border rounded-2xl p-5 mb-4">
-        <h3 className="font-bold mb-3">Контакты</h3>
-        {[{ icon: 'Mail', val: user.email }, { icon: 'Phone', val: user.phone }, { icon: 'MapPin', val: user.city }].map((c) => (
-          <div key={c.icon} className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-sm"><Icon name={c.icon} size={16} /><span>{c.val}</span></div>
-            <button className="text-xs text-primary">Изменить</button>
-          </div>
-        ))}
       </div>
       <div className="bg-card border border-border rounded-2xl overflow-hidden mb-4">
         {[{ icon: 'CalendarCheck', label: 'Мои бронирования', p: 'bookings', count: 3 }, { icon: 'Heart', label: 'Избранное', p: 'favorites', count: 5 }, { icon: 'Tag', label: 'Мои лоты', p: 'seller', count: 2 }, { icon: 'MessageCircle', label: 'Сообщения', p: 'chat', count: 2 }, { icon: 'Bell', label: 'Уведомления', p: 'notifications', count: 3 }].map((item, i, arr) => (
@@ -447,6 +455,12 @@ function ProfilePage({ nav }: { nav: (p: string) => void }) {
             </div>
           </button>
         ))}
+      </div>
+      <div className="bg-card border border-border rounded-2xl overflow-hidden">
+        <button onClick={onLogout} className="w-full flex items-center gap-3 px-5 py-4 hover:bg-secondary transition-colors text-destructive">
+          <Icon name="LogOut" size={18} />
+          <span className="text-sm font-medium">Выйти</span>
+        </button>
       </div>
     </div>
   );
@@ -964,6 +978,87 @@ function ThemeSwitcher({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme)
   );
 }
 
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+const AUTH_URL = 'https://functions.poehali.dev/46b78309-012f-4fb6-aebc-43255d00f5fc';
+
+function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u: AuthUser) => void }) {
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'buyer' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const submit = async () => {
+    setError(''); setLoading(true);
+    try {
+      const path = mode === 'login' ? '/login' : '/register';
+      const body = mode === 'login'
+        ? { email: form.email, password: form.password }
+        : { email: form.email, password: form.password, name: form.name, role: form.role };
+      const res = await fetch(AUTH_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error || 'Ошибка'); return; }
+      onSuccess(data as AuthUser);
+    } catch (_e) {
+      setError('Ошибка соединения');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-card border border-border w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-6 animate-scale-in">
+        <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground">
+          <Icon name="X" size={18} />
+        </button>
+
+        <h2 className="text-xl font-black text-foreground mb-1">{mode === 'login' ? 'Войти в ЛИКВИД' : 'Регистрация'}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{mode === 'login' ? 'Добро пожаловать назад!' : 'Создайте аккаунт бесплатно'}</p>
+
+        <div className="flex gap-2 mb-5 bg-secondary p-1 rounded-xl">
+          {(['login', 'register'] as const).map((m) => (
+            <button key={m} onClick={() => { setMode(m); setError(''); }} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${mode === m ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>
+              {m === 'login' ? 'Войти' : 'Зарегистрироваться'}
+            </button>
+          ))}
+        </div>
+
+        <div className="space-y-3">
+          {mode === 'register' && (
+            <div>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Ваше имя</label>
+              <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Алина Иванова" className="w-full mt-1 bg-secondary text-foreground text-sm px-4 py-3 rounded-xl outline-none border border-transparent focus:border-primary placeholder:text-muted-foreground" />
+            </div>
+          )}
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</label>
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="email@example.com" className="w-full mt-1 bg-secondary text-foreground text-sm px-4 py-3 rounded-xl outline-none border border-transparent focus:border-primary placeholder:text-muted-foreground" />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Пароль</label>
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="••••••••" onKeyDown={(e) => e.key === 'Enter' && submit()} className="w-full mt-1 bg-secondary text-foreground text-sm px-4 py-3 rounded-xl outline-none border border-transparent focus:border-primary placeholder:text-muted-foreground" />
+          </div>
+          {mode === 'register' && (
+            <div className="flex gap-2">
+              {([{ v: 'buyer', l: '🛍 Покупатель' }, { v: 'seller', l: '🏪 Продавец' }] as const).map((r) => (
+                <button key={r.v} onClick={() => setForm({ ...form, role: r.v })} className={`flex-1 py-2.5 text-sm font-semibold rounded-xl border transition-colors ${form.role === r.v ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}>{r.l}</button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {error && <p className="mt-3 text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>}
+
+        <button onClick={submit} disabled={loading} className="w-full mt-5 bg-primary hover:bg-primary/90 disabled:opacity-50 text-primary-foreground font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+          {loading && <Icon name="Loader2" size={16} className="animate-spin" />}
+          {mode === 'login' ? 'Войти' : 'Создать аккаунт'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main App ─────────────────────────────────────────────────────────────────
 type Page = 'home' | 'search' | 'categories' | 'profile' | 'bookings' | 'favorites' | 'chat' | 'notifications' | 'seller' | 'admin' | 'lots';
 
@@ -972,17 +1067,26 @@ export default function Index() {
   const [openLot, setOpenLot] = useState<Lot | null>(null);
   const [favs, setFavs] = useState<string[]>(['2', '4']);
   const [theme, setTheme] = useState<Theme>('night');
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [showAuth, setShowAuth] = useState(false);
 
   const applyTheme = (t: Theme) => {
     setTheme(t);
     document.documentElement.setAttribute('data-theme', t);
   };
 
-  const nav = (p: string) => setPage(p as Page);
+  const nav = (p: string) => {
+    if ((p === 'profile' || p === 'seller' || p === 'bookings') && !user) {
+      setShowAuth(true); return;
+    }
+    setPage(p as Page);
+  };
   const toggleFav = (id: string) => setFavs((prev) => prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]);
   const openModal = (lot: Lot) => setOpenLot(lot);
   const closeModal = () => setOpenLot(null);
   const bookLot = (_lot: Lot) => { closeModal(); nav('bookings'); };
+  const handleLogin = (u: AuthUser) => { setUser(u); setShowAuth(false); };
+  const handleLogout = () => { setUser(null); setPage('home'); };
 
   const lotsWithFav = LOTS.map((l) => ({ ...l, isFavorite: favs.includes(l.id) }));
   const activeLot = openLot ? (lotsWithFav.find((l) => l.id === openLot.id) ?? openLot) : null;
@@ -992,7 +1096,7 @@ export default function Index() {
       case 'home': return <HomePage nav={nav} onOpen={openModal} onFav={toggleFav} theme={theme} setTheme={applyTheme} />;
       case 'search': case 'lots': return <SearchPage onOpen={openModal} onFav={toggleFav} />;
       case 'categories': return <CategoriesPage nav={nav} />;
-      case 'profile': return <ProfilePage nav={nav} />;
+      case 'profile': return <ProfilePage nav={nav} user={user} onLogout={handleLogout} />;
       case 'bookings': return <BookingsPage nav={nav} />;
       case 'favorites': return <FavoritesPage favIds={favs} onOpen={openModal} onFav={toggleFav} />;
       case 'chat': return <ChatPage />;
@@ -1005,11 +1109,12 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header page={page} nav={nav} />
+      <Header page={page} nav={nav} user={user} onAuthClick={() => setShowAuth(true)} />
       <SubNav page={page} nav={nav} />
       <main className="pb-24 md:pb-8">{renderPage()}</main>
       <BottomNav page={page} nav={nav} />
       <LotModal lot={activeLot} onClose={closeModal} onBook={bookLot} />
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} onSuccess={handleLogin} />}
     </div>
   );
 }
