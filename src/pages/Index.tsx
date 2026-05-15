@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, type FC } from 'react';
 import * as LucideIcons from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
-import React from 'react';
 
 // ─── Icon ────────────────────────────────────────────────────────────────────
-const Icon: React.FC<LucideProps & { name: string; fallback?: string }> = ({ name, fallback = 'CircleAlert', ...props }) => {
-  const C = (LucideIcons as Record<string, React.FC<LucideProps>>)[name]
-    || (LucideIcons as Record<string, React.FC<LucideProps>>)[fallback];
+const Icon: FC<LucideProps & { name: string; fallback?: string }> = ({ name, fallback = 'CircleAlert', ...props }) => {
+  const C = (LucideIcons as Record<string, FC<LucideProps>>)[name]
+    || (LucideIcons as Record<string, FC<LucideProps>>)[fallback];
   if (!C) return null;
   return <C {...props} />;
 };
