@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import * as LucideIcons from 'lucide-react';
-import type { LucideProps, LucideIcon } from 'lucide-react';
 import AdminPage from './AdminPage';
 import { type Lot, type AuthUser, type Theme, THEMES, CATEGORIES, LOTS, BOOKINGS, STATUS_MAP, AUTH_URL } from '@/data/appData';
 
 // ─── Icon ────────────────────────────────────────────────────────────────────
-function Icon({ name, fallback = 'CircleAlert', ...props }: { name: string; fallback?: string } & Omit<LucideProps, 'name'>) {
-  const C = (LucideIcons as Record<string, LucideIcon>)[name]
-    ?? (LucideIcons as Record<string, LucideIcon>)[fallback];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function Icon(props: Record<string, any>) {
+  const { name, fallback = 'CircleAlert', ...rest } = props;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const icons = LucideIcons as Record<string, any>;
+  const C = icons[name] ?? icons[fallback];
   if (!C) return null;
-  return <C {...props} />;
+  return <C {...rest} />;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
