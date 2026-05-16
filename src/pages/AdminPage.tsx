@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MOCK_USERS, CATEGORIES, LOTS } from '@/data/appData';
 import * as LucideIcons from 'lucide-react';
-import type { LucideProps } from 'lucide-react';
+import type { LucideProps, LucideIcon } from 'lucide-react';
 
 function Icon({ name, ...props }: { name: string } & Omit<LucideProps, 'name'>) {
-  const C = (LucideIcons as Record<string, React.FC<LucideProps>>)[name];
+  const C = (LucideIcons as Record<string, LucideIcon>)[name];
   if (!C) return null;
   return <C {...props} />;
 }

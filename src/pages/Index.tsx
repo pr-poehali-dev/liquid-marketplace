@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as LucideIcons from 'lucide-react';
-import type { LucideProps } from 'lucide-react';
+import type { LucideProps, LucideIcon } from 'lucide-react';
 import AdminPage from './AdminPage';
 import { type Lot, type AuthUser, type Theme, THEMES, CATEGORIES, LOTS, BOOKINGS, STATUS_MAP, AUTH_URL } from '@/data/appData';
 
 // ─── Icon ────────────────────────────────────────────────────────────────────
 function Icon({ name, fallback = 'CircleAlert', ...props }: { name: string; fallback?: string } & Omit<LucideProps, 'name'>) {
-  const C = (LucideIcons as Record<string, React.FC<LucideProps>>)[name]
-    ?? (LucideIcons as Record<string, React.FC<LucideProps>>)[fallback];
+  const C = (LucideIcons as Record<string, LucideIcon>)[name]
+    ?? (LucideIcons as Record<string, LucideIcon>)[fallback];
   if (!C) return null;
   return <C {...props} />;
 }
