@@ -4,19 +4,16 @@ import AdminPage from './AdminPage';
 import { type Lot, type AuthUser, type Theme, THEMES, CATEGORIES, LOTS, BOOKINGS, STATUS_MAP, AUTH_URL } from '@/data/appData';
 
 // ─── Icon ────────────────────────────────────────────────────────────────────
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Icon(props: Record<string, any>) {
-  const { name, fallback = 'CircleAlert', ...rest } = props;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const icons = LucideIcons as Record<string, any>;
-  const C = icons[name] ?? icons[fallback];
+function Icon({ name, fallback = 'CircleAlert', ...rest }: { name: string; fallback?: string; [key: string]: unknown }) {
+  const all = LucideIcons as Record<string, (p: object) => ReturnType<typeof LucideIcons.Home>>;
+  const C = all[name] ?? all[fallback];
   if (!C) return null;
-  return <C {...rest} />;
+  return <C {...(rest as object)} />;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function fmtPrice(price: number): string {
-  if (price >= 1_000_000) return `${(price / 1_000_000).toFixed(1)} млн ₽`;
+  if (price >= 1000000) return `${(price / 1000000).toFixed(1)} млн ₽`;
   if (price >= 1000) return `${Math.round(price / 1000)} 000 ₽`;
   return `${price} ₽`;
 }

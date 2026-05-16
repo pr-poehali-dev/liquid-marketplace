@@ -2,13 +2,11 @@ import { useState } from 'react';
 import { MOCK_USERS, CATEGORIES, LOTS } from '@/data/appData';
 import * as LucideIcons from 'lucide-react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Icon(props: Record<string, any>) {
-  const { name, ...rest } = props;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const C = (LucideIcons as Record<string, any>)[name];
+function Icon({ name, ...rest }: { name: string; [key: string]: unknown }) {
+  const all = LucideIcons as Record<string, (p: object) => ReturnType<typeof LucideIcons.Home>>;
+  const C = all[name];
   if (!C) return null;
-  return <C {...rest} />;
+  return <C {...(rest as object)} />;
 }
 
 export default function AdminPage() {
