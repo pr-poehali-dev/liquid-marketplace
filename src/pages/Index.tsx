@@ -1,16 +1,16 @@
-import { useState, type FC } from 'react';
+import React, { useState } from 'react';
 import * as LucideIcons from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 import AdminPage from './AdminPage';
 import { type Lot, type AuthUser, type Theme, THEMES, CATEGORIES, LOTS, BOOKINGS, STATUS_MAP, AUTH_URL } from '@/data/appData';
 
 // ─── Icon ────────────────────────────────────────────────────────────────────
-const Icon: FC<LucideProps & { name: string; fallback?: string }> = ({ name, fallback = 'CircleAlert', ...props }) => {
-  const C = (LucideIcons as Record<string, FC<LucideProps>>)[name]
-    ?? (LucideIcons as Record<string, FC<LucideProps>>)[fallback];
+function Icon({ name, fallback = 'CircleAlert', ...props }: { name: string; fallback?: string } & Omit<LucideProps, 'name'>) {
+  const C = (LucideIcons as Record<string, React.FC<LucideProps>>)[name]
+    ?? (LucideIcons as Record<string, React.FC<LucideProps>>)[fallback];
   if (!C) return null;
   return <C {...props} />;
-};
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function fmtPrice(price: number): string {

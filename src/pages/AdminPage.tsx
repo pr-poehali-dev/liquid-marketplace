@@ -1,13 +1,13 @@
-import { useState, type FC } from 'react';
+import React, { useState } from 'react';
 import { MOCK_USERS, CATEGORIES, LOTS } from '@/data/appData';
 import * as LucideIcons from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 
-const Icon: FC<LucideProps & { name: string }> = ({ name, ...props }) => {
-  const C = (LucideIcons as Record<string, FC<LucideProps>>)[name];
+function Icon({ name, ...props }: { name: string } & Omit<LucideProps, 'name'>) {
+  const C = (LucideIcons as Record<string, React.FC<LucideProps>>)[name];
   if (!C) return null;
   return <C {...props} />;
-};
+}
 
 export default function AdminPage() {
   const [tab, setTab] = useState('dashboard');
