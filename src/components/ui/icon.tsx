@@ -1,6 +1,20 @@
 import * as React from 'react';
-import * as LucideIcons from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
+import {
+  Image, Heart, MapPin, Star, X, Eye, MessageCircle, Search, Bell, LogIn,
+  Home, Tag, CalendarCheck, User, ChevronDown, ChevronRight, SearchX,
+  SlidersHorizontal, CalendarX, HeartOff, ArrowLeft, Send, Loader2, Upload,
+  LayoutDashboard, Users, Grid3X3, CreditCard, FileBarChart, ShieldCheck,
+  Clock, Flag, TrendingUp, CircleAlert,
+} from 'lucide-react';
+
+const ICONS: Record<string, React.FC<LucideProps>> = {
+  Image, Heart, MapPin, Star, X, Eye, MessageCircle, Search, Bell, LogIn,
+  Home, Tag, CalendarCheck, User, ChevronDown, ChevronRight, SearchX,
+  SlidersHorizontal, CalendarX, HeartOff, ArrowLeft, Send, Loader2, Upload,
+  LayoutDashboard, Users, Grid3X3, CreditCard, FileBarChart, ShieldCheck,
+  Clock, Flag, TrendingUp, CircleAlert,
+};
 
 interface IconProps extends LucideProps {
   name: string;
@@ -8,15 +22,9 @@ interface IconProps extends LucideProps {
 }
 
 const Icon: React.FC<IconProps> = ({ name, fallback = 'CircleAlert', ...props }) => {
-  const IconComponent = (LucideIcons as Record<string, React.FC<LucideProps>>)[name];
-
-  if (!IconComponent) {
-    const FallbackIcon = (LucideIcons as Record<string, React.FC<LucideProps>>)[fallback ?? 'CircleAlert'];
-    if (!FallbackIcon) return null;
-    return <FallbackIcon {...props} />;
-  }
-
-  return <IconComponent {...props} />;
+  const C = ICONS[name] ?? ICONS[fallback ?? 'CircleAlert'] ?? ICONS['CircleAlert'];
+  if (!C) return null;
+  return <C {...props} />;
 };
 
 export default Icon;
