@@ -4,7 +4,7 @@ import {
   Image, Heart, MapPin, Star, X, Eye, MessageCircle, Search, Bell, LogIn,
   Home, Tag, CalendarCheck, User, ChevronDown, ChevronRight, SearchX,
   SlidersHorizontal, CalendarX, HeartOff, ArrowLeft, Send, Loader2, Upload,
-  LayoutDashboard, Users, Grid3X3, CreditCard, FileBarChart, ShieldCheck,
+  LayoutDashboard, Users, Grid3x3, CreditCard, BarChart, ShieldCheck,
   Clock, Flag, TrendingUp, CircleAlert,
 } from 'lucide-react';
 
@@ -12,7 +12,7 @@ const ICONS: Record<string, React.FC<LucideProps>> = {
   Image, Heart, MapPin, Star, X, Eye, MessageCircle, Search, Bell, LogIn,
   Home, Tag, CalendarCheck, User, ChevronDown, ChevronRight, SearchX,
   SlidersHorizontal, CalendarX, HeartOff, ArrowLeft, Send, Loader2, Upload,
-  LayoutDashboard, Users, Grid3X3, CreditCard, FileBarChart, ShieldCheck,
+  LayoutDashboard, Users, Grid3X3: Grid3x3, CreditCard, FileBarChart: BarChart, ShieldCheck,
   Clock, Flag, TrendingUp, CircleAlert,
 };
 

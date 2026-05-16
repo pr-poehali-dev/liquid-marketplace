@@ -13,7 +13,7 @@ export default function AdminPage() {
     { id: 'dashboard', label: 'Дашборд', icon: 'LayoutDashboard' },
     { id: 'users', label: 'Пользователи', icon: 'Users' },
     { id: 'lots', label: 'Лоты', icon: 'Tag' },
-    { id: 'categories', label: 'Категории', icon: 'Grid3X3' },
+    { id: 'categories', label: 'Категории', icon: 'Grid3x3' },
     { id: 'bookings', label: 'Бронирования', icon: 'CalendarCheck' },
     { id: 'reviews', label: 'Отзывы', icon: 'Star' },
     { id: 'subscriptions', label: 'Подписки', icon: 'CreditCard' },
