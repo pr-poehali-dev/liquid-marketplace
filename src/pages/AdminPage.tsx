@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { MOCK_USERS, CATEGORIES, LOTS } from '@/data/appData';
-import * as LucideIcons from 'lucide-react';
-
-function Icon({ name, ...rest }: { name: string; [key: string]: unknown }) {
-  const all = LucideIcons as Record<string, (p: object) => ReturnType<typeof LucideIcons.Home>>;
-  const C = all[name];
-  if (!C) return null;
-  return <C {...(rest as object)} />;
-}
+import Icon from '@/components/ui/icon';
 
 export default function AdminPage() {
   const [tab, setTab] = useState('dashboard');

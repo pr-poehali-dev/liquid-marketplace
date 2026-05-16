@@ -1,15 +1,7 @@
 import { useState } from 'react';
-import * as LucideIcons from 'lucide-react';
+import Icon from '@/components/ui/icon';
 import AdminPage from './AdminPage';
 import { type Lot, type AuthUser, type Theme, THEMES, CATEGORIES, LOTS, BOOKINGS, STATUS_MAP, AUTH_URL } from '@/data/appData';
-
-// ─── Icon ────────────────────────────────────────────────────────────────────
-function Icon({ name, fallback = 'CircleAlert', ...rest }: { name: string; fallback?: string; [key: string]: unknown }) {
-  const all = LucideIcons as Record<string, (p: object) => ReturnType<typeof LucideIcons.Home>>;
-  const C = all[name] ?? all[fallback];
-  if (!C) return null;
-  return <C {...(rest as object)} />;
-}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function fmtPrice(price: number): string {
